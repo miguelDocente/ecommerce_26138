@@ -76,4 +76,12 @@ public class ProductoService {
         Producto p = obtenerPorId(id);
         repository.delete(p);
     }
+
+    public List<Producto> buscarPorNombre(String nombre) {
+        return repository.findByNombre(nombre);
+    }
+
+    public List<Producto> buscarPorCategoria(String categoria) {
+        return repository.buscarPorCategoria(categoria);
+    }
 }

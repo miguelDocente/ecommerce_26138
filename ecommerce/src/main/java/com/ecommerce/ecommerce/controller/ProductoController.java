@@ -73,4 +73,17 @@ public class ProductoController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    // GET /productos/nombre/{nombre}
+    @GetMapping("/nombre/{nombre}")
+    public ResponseEntity<List<Producto>> buscarPorNombre(@PathVariable String nombre) {
+        return ResponseEntity.ok(service.buscarPorNombre(nombre));
+    }
+
+    // GET /productos/categoria/{categoria}
+    @GetMapping("/categoria/{categoria}")
+    public ResponseEntity<List<Producto>> buscarPorCategoria(@PathVariable String categoria) {
+        return ResponseEntity.ok(service.buscarPorCategoria(categoria));
+    }
+
 }
