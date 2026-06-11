@@ -21,9 +21,6 @@ public class CategoriaService {
     }
 
     public Categoria guardar(Categoria c) {
-        if (c.getNombre() == null || c.getNombre().isBlank()) {
-            throw new CategoriaNombreInvalidoException("El nombre de la categoría no puede estar vacío.");
-        }
         return repository.save(c);
     }
 

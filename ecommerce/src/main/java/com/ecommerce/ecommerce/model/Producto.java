@@ -1,6 +1,9 @@
 package com.ecommerce.ecommerce.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 
 @Entity
 @Table(name = "producto")
@@ -10,12 +13,15 @@ public class Producto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @NotBlank(message = "El nombre del producto no puede estar vacío")
     @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
 
+    @Positive(message = "El precio debe ser mayor que cero")
     @Column(name = "precio", nullable = false)
     private double precio;
 
+    @PositiveOrZero(message = "El stock no puede ser negativo")
     @Column(name = "stock", nullable = false)
     private int stock;
 

@@ -21,17 +21,6 @@ public class ProductoService {
 
     // CREATE
     public Producto guardar(Producto p) {
-        // [REPASO] Validación agregada en clase de repaso.
-        if (p.getNombre() == null || p.getNombre().isBlank()) {
-            throw new IllegalArgumentException("El nombre del producto no puede estar vacío.");
-        }
-        if (p.getPrecio() <= 0) {
-            throw new PrecioInvalidoException("El precio debe ser mayor a cero. Se recibió: " + p.getPrecio());
-        }
-        if (p.getStock() < 0) {
-            throw new StockInsuficienteException("El stock no puede ser negativo. Se recibió: " + p.getStock());
-        }
-
         return repository.save(p);
     }
 
@@ -49,18 +38,6 @@ public class ProductoService {
 
     // UPDATE
     public Producto actualizar(int id, Producto datos) {
-        // [REPASO] Mismas validaciones que en guardar().
-        if (datos.getNombre() == null || datos.getNombre().isBlank()) {
-            throw new IllegalArgumentException("El nombre del producto no puede estar vacío.");
-        }
-        if (datos.getPrecio() <= 0) {
-            throw new PrecioInvalidoException("El precio debe ser mayor a cero. Se recibió: " + datos.getPrecio());
-        }
-        if (datos.getStock() < 0) {
-            throw new StockInsuficienteException("El stock no puede ser negativo. Se recibió: " + datos.getStock());
-        }
-
-        // Si no existe, obtenerPorId lanza excepción y se corta acá.
         Producto p = obtenerPorId(id);
 
         p.setNombre(datos.getNombre());
@@ -78,7 +55,7 @@ public class ProductoService {
     }
 
     public List<Producto> buscarPorNombre(String nombre) {
-        return repository.findByNombre(nombre);
+        return repository.findByNombreContaining(nombre);
     }
 
     public List<Producto> buscarPorCategoria(String categoria) {

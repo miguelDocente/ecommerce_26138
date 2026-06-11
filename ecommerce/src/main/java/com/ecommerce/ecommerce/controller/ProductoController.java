@@ -17,6 +17,8 @@ import com.ecommerce.ecommerce.exception.ProductoNoEncontradoException;
 import com.ecommerce.ecommerce.model.Producto;
 import com.ecommerce.ecommerce.service.ProductoService;
 
+import jakarta.validation.Valid;
+
 // @RestController: maneja requests HTTP y serializa las respuestas a JSON.
 // @RequestMapping: define la URL base de todos los endpoints de esta clase.
 @RestController
@@ -48,14 +50,14 @@ public class ProductoController {
 
     // POST /productos — 201 Created con el producto creado.
     @PostMapping
-    public ResponseEntity<Producto> crearProducto(@RequestBody Producto nuevoProducto) {
+    public ResponseEntity<Producto> crearProducto(@Valid @RequestBody Producto nuevoProducto) {
         Producto creado = service.guardar(nuevoProducto);
         return ResponseEntity.status(HttpStatus.CREATED).body(creado);
     }
 
     // PUT /productos/{id} — 200 OK si existe, 404 si no.
     @PutMapping("/{id}")
-    public ResponseEntity<Producto> actualizar(@PathVariable int id, @RequestBody Producto datos) {
+    public ResponseEntity<Producto> actualizar(@PathVariable int id, @Valid @RequestBody Producto datos) {
         try {
             return ResponseEntity.ok(service.actualizar(id, datos));
         } catch (ProductoNoEncontradoException e) {
