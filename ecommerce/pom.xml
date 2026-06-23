@@ -61,6 +61,13 @@
     	<groupId>org.springframework.boot</groupId>
     	<artifactId>spring-boot-starter-validation</artifactId>
 	</dependency>
+
+<!--lombok: permite usar @Getter, @Setter, @NoArgsConstructor, @AllArgsConstructor, etc. -->
+	<dependency>
+    	<groupId>org.projectlombok</groupId>
+    	<artifactId>lombok</artifactId>
+    	<optional>true</optional>
+	</dependency>
 	
 	</dependencies>
 

@@ -1,8 +1,6 @@
 package com.ecommerce.ecommerce.service;
 
-import com.ecommerce.ecommerce.exception.PrecioInvalidoException; // [REPASO] Nuevo import
 import com.ecommerce.ecommerce.exception.ProductoNoEncontradoException;
-import com.ecommerce.ecommerce.exception.StockInsuficienteException; // [REPASO] Ahora sí se usa
 import com.ecommerce.ecommerce.model.Producto;
 import com.ecommerce.ecommerce.repository.ProductoRepository;
 
@@ -12,14 +10,12 @@ import java.util.List;
 @Service
 public class ProductoService {
 
-    // Inyección por constructor: Spring pasa el repositorio.
     private final ProductoRepository repository;
 
     public ProductoService(ProductoRepository repository) {
         this.repository = repository;
     }
 
-    // CREATE
     public Producto guardar(Producto p) {
         return repository.save(p);
     }
@@ -28,28 +24,28 @@ public class ProductoService {
         return repository.findAll();
     }
 
-    // READ: por id. findById devuelve Optional — si está vacío, lanzamos la
-    // excepción.
-    public Producto obtenerPorId(int id) {
+    public Producto obtenerPorId(Integer id) {
 
         return repository.findById(id)
                 .orElseThrow(() -> new ProductoNoEncontradoException("No se encontró un producto con id " + id));
     }
 
     // UPDATE
-    public Producto actualizar(int id, Producto datos) {
+    public Producto actualizar(Integer id, Producto datos) {
         Producto p = obtenerPorId(id);
 
         p.setNombre(datos.getNombre());
         p.setPrecio(datos.getPrecio());
         p.setStock(datos.getStock());
         p.setCategoria(datos.getCategoria());
+        if (datos.getImagenUrl() != null) {
+            p.setImagenUrl(datos.getImagenUrl());
+        }; // campo nuevo
 
         return repository.save(p);
     }
 
-    // DELETE
-    public void eliminar(int id) {
+    public void eliminar(Integer id) {
         Producto p = obtenerPorId(id);
         repository.delete(p);
     }
@@ -59,6 +55,6 @@ public class ProductoService {
     }
 
     public List<Producto> buscarPorCategoria(String categoria) {
-        return repository.buscarPorCategoria(categoria);
+        return repository.findByCategoriaNombreContainingIgnoreCase(categoria);
     }
 }
