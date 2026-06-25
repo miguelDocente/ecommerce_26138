@@ -18,11 +18,10 @@ public class Carrito {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToMany
-    @JoinTable(
-        name = "carrito_productos",
-        joinColumns = @JoinColumn(name = "carrito_id"),
-        inverseJoinColumns = @JoinColumn(name = "producto_id")
-    )
-    private List<Producto> productos = new ArrayList<>();
+    // OneToMany: un carrito tiene muchos CarritoProducto.
+    // mappedBy indica que la relación está definida en CarritoProducto (campo "carrito").
+    // CascadeType.ALL: si se elimina el carrito, se eliminan sus CarritoProducto.
+    // orphanRemoval: si se quita un CarritoProducto de la lista, se elimina de la base.
+    @OneToMany(mappedBy = "carrito", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CarritoProducto> productos = new ArrayList<>();
 }

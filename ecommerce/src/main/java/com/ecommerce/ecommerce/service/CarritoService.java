@@ -3,21 +3,28 @@ package com.ecommerce.ecommerce.service;
 import com.ecommerce.ecommerce.exception.CarritoNoEncontradoException;
 import com.ecommerce.ecommerce.exception.StockInsuficienteException;
 import com.ecommerce.ecommerce.model.Carrito;
+import com.ecommerce.ecommerce.model.CarritoProducto;
 import com.ecommerce.ecommerce.model.Producto;
+import com.ecommerce.ecommerce.repository.CarritoProductoRepository;
 import com.ecommerce.ecommerce.repository.CarritoRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CarritoService {
 
     private final CarritoRepository carritoRepository;
     private final ProductoService productoService;
+    private final CarritoProductoRepository carritoProductoRepository;
 
     public CarritoService(CarritoRepository carritoRepository,
-                          ProductoService productoService) {
+                          CarritoProductoRepository carritoProductoRepository, ProductoService productoService) {
         this.carritoRepository = carritoRepository;
         this.productoService = productoService;
+        // el error!!!
+        //this.carritoProductoRepository = null;
+        this.carritoProductoRepository = carritoProductoRepository;                 
     }
 
     public Carrito crear() {
@@ -45,11 +52,25 @@ public class CarritoService {
                     "El producto \"" + producto.getNombre() + "\" no tiene stock disponible.");
         }
 
+        // buscamos si ya existe una fila con este producto en el carrito
+        Optional<CarritoProducto> existente = carritoProductoRepository.findByCarritoAndProducto(carrito, producto);
+
+        if(existente.isPresent()){
+            // El producto ya esta en el carrito incrementamos 
+            CarritoProducto cp = existente.get();
+            cp.setCantidad(cp.getCantidad() + 1);
+            carritoProductoRepository.save(cp);
+
+        }else{
+            // el producto no esta en el carrito - creamos una fila nueva
+            CarritoProducto nuevo = new CarritoProducto(null,carrito,producto,1);
+            carritoProductoRepository.save(nuevo);
+        }
+
         // Descuenta una unidad de stock y persiste el cambio
         producto.setStock(producto.getStock() - 1);
         productoService.guardar(producto);
 
-        carrito.getProductos().add(producto);
         return carritoRepository.save(carrito);
     }
 
